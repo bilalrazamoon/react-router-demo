@@ -1,25 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
+
+import "./App.css";
+import { Login } from "./pages/Login";
+import { Signup } from "./pages/Signup";
+import { Home } from "./pages/Home";
 
 function App() {
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  useEffect(function () {
+    console.log("App mount");
+
+    return function () {
+      console.log("App unmount");
+    };
+  }, []);
+
+  function login() {
+    setLoggedIn(true);
+  }
+
+  function logout() {
+    setLoggedIn(false);
+  }
+
+  function signup() {
+    setLoggedIn(true);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/login">
+          {loggedIn ? <Redirect to="/" /> : <Login login={login} />}
+        </Route>
+        <Route path="/signup">
+          {loggedIn ? <Redirect to="/" /> : <Signup signup={signup} />}
+        </Route>
+        <Route path="/">
+          {loggedIn ? <Home logout={logout} /> : <Redirect to="/login" />}
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
